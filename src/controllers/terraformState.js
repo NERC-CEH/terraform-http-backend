@@ -7,13 +7,13 @@ function getState(request, response) {
   return terraformStateRepository.getStateByName(request.params.name)
     .then((state) => {
       // Even if null is being returned still return a 200 as this is what Terraform expects
-      return response.send(state ? state.state : null);
+      return response.send(state ? JSON.parse(state.state) : null);
     });
 }
 
 function putState(request, response) {
   logger.debug(`POST request for: ${request.params.name}`);
-  return terraformStateRepository.createOrUpdate({ name: request.params.name, state: request.body })
+  return terraformStateRepository.createOrUpdate({ name: request.params.name, state: JSON.stringify(request.body) })
     .then((state) => response.status(201).send(state));
 }
 
