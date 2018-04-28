@@ -6,11 +6,8 @@ function getState(request, response) {
   logger.debug(`GET request for: ${request.params.name}`);
   return terraformStateRepository.getStateByName(request.params.name)
     .then((state) => {
-      if (state) {
-        return response.send(state.state);
-      } else {
-        return response.status(404).send();
-      }
+      // Even if null is being returned still return a 200 as this is what Terraform expects
+      return response.send(state ? state.state : null);
     });
 }
 
