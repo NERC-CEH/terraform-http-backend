@@ -1,0 +1,49 @@
+{
+  "name": "terraform-http-backend",
+  "version": "1.0.0",
+  "description": "An HTTP backend for Terraform",
+  "main": "index.js",
+  "author": "gary.lloyd@tessella.com",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "axios": "0.18.0",
+    "bluebird": "3.5.1",
+    "body-parser": "1.18.2",
+    "chalk": "2.1.0",
+    "convict": "4.0.0",
+    "express": "4.16.3",
+    "lodash": "4.17.5",
+    "mongoose": "5.0.15",
+    "winston": "2.3.1"
+  },
+  "devDependencies": {
+    "babel-cli": "6.26.0",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-preset-env": "1.6.1",
+    "eslint": "4.5.0",
+    "eslint-config-airbnb-base": "11.3.1",
+    "eslint-plugin-import": "2.7.0",
+    "jest": "20.0.4",
+    "nodemon": "1.11.0",
+    "shx": "0.2.2"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ],
+    "plugins": [
+      "transform-object-rest-spread"
+    ]
+  },
+  "scripts": {
+    "lint": "eslint src",
+    "start": "nodemon --exec babel-node src/server.js",
+    "clean": "shx rm -rf ./dist",
+    "build": "babel src --ignore spec.js,__mocks__ --out-dir dist",
+    "dist": "yarn clean && yarn build && yarn update-version",
+    "test": "yarn test-ci --watch",
+    "test-ci": "jest",
+    "update-version": "VERSION=`git describe --tags --always` && sed -i -- 's/undefined/\"'\"$VERSION\"'\"/g' dist/version.js"
+  }
+}
