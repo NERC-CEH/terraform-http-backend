@@ -19,6 +19,21 @@ const config = convict({
     default: 8000,
     env: 'API_PORT',
   },
+  username: {
+    doc: 'The username for basic auth',
+    format: 'String',
+    default: 'username',
+    env: 'USERNAME',
+  },
+  password: {
+    doc: 'The password for basic auth',
+    format: 'String',
+    default: 'password',
+    env: 'PASSWORD',
+  },
+  userName: {
+
+  }
 });
 
 export default config;
