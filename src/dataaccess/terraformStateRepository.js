@@ -12,7 +12,6 @@ function getStateByName(name) {
 function createOrUpdate(stateRecord) {
   const query = { name: stateRecord.name };
   const options = { upsert: true, setDefaultsOnInsert: true };
-  console.log(stateRecord);
   return TerraformState().findOneAndUpdate(query, stateRecord, options);
 }
 
@@ -24,14 +23,14 @@ function lockState(name) {
   return getStateByName(name)
     .then((state) => {
       if (state) {
-        logger.debug(`Existing state ${state}`);
+        logger.debug(`Existing state found for ${name}`);
         if (state.locked) {
           throw new Error(`State ${name} already locked`);
         }
         state.locked = true;
         return state.save();
       } else {
-        logger.debug(`Creating new state`);
+        logger.debug(`Creating new state for ${name}`);
         return createOrUpdate({ name, state, locked: true });
       }
     })
