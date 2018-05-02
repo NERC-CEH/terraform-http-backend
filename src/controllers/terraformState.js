@@ -5,16 +5,28 @@ import terraformStateRepository from '../dataaccess/terraformStateRepository';
 function getState(request, response) {
   logger.debug(`GET request for: ${request.params.name}`);
   return terraformStateRepository.getStateByName(request.params.name)
-    .then((state) => {
-      // Even if null is being returned still return a 200 as this is what Terraform expects
-      return response.send(state ? JSON.parse(state.state) : null);
+    .then((stateRecord) => {
+      if (stateRecord.state) {
+        return response.status(200).send(stateRecord.state);
+      } else {
+        // Even if null is being returned still return a 200 as this is what Terraform expects
+        return response.status(200).send();
+      }
+    })
+    .catch((error) => {
+      logger.error(error);
+      return response.status(500).send({ message: `Unable to load state for: ${request.params.name}`})
     });
 }
 
 function putState(request, response) {
   logger.debug(`POST request for: ${request.params.name}`);
-  return terraformStateRepository.createOrUpdate({ name: request.params.name, state: JSON.stringify(request.body) })
-    .then((state) => response.status(201).send(state));
+  return terraformStateRepository.createOrUpdate(request.params.name, request.body)
+    .then((state) => response.status(201).send(state))
+    .catch((error) => {
+      logger.error(error);
+      return response.status(500).send({ message: `Unable to store state for: ${request.params.name}`})
+    });
 }
 
 function deleteState(request, response) {
@@ -26,6 +38,10 @@ function deleteState(request, response) {
       } else {
         response.status(404).send();
       }
+    })
+    .catch((error) => {
+      logger.error(error);
+      return response.status(500).send({ message: `Unable to delete state for: ${request.params.name}`})
     });
 }
 

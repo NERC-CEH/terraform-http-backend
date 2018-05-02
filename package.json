@@ -16,6 +16,7 @@
     "express-basic-auth": "1.1.5",
     "lodash": "4.17.5",
     "mongoose": "5.0.15",
+    "node-mocks-http": "1.5.8",
     "winston": "2.3.1"
   },
   "devDependencies": {

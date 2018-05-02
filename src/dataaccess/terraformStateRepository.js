@@ -6,11 +6,16 @@ function TerraformState() {
 }
 
 function getStateByName(name) {
-  return TerraformState().findOne({ name });
+  return TerraformState().findOne({ name })
+    .then((stateRecord) => ({
+      name: stateRecord.name,
+      state: stateRecord.state ? JSON.parse(stateRecord.state) : null,
+    }));
 }
 
-function createOrUpdate(stateRecord) {
-  const query = { name: stateRecord.name };
+function createOrUpdate(name, state) {
+  const stateRecord = { name, state: JSON.stringify(state) };
+  const query = { name };
   const options = { upsert: true, setDefaultsOnInsert: true };
   return TerraformState().findOneAndUpdate(query, stateRecord, options);
 }
