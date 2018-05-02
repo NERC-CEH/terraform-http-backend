@@ -5,16 +5,27 @@ import terraformStateRepository from '../dataaccess/terraformStateRepository';
 function getState(request, response) {
   logger.debug(`GET request for: ${request.params.name}`);
   return terraformStateRepository.getStateByName(request.params.name)
-    .then((state) => {
+    .then((stateRecord) => {
+      if (stateRecord && stateRecord.state) {
+        return response.status(200).send(stateRecord.state);
+      }
       // Even if null is being returned still return a 200 as this is what Terraform expects
-      return response.send(state ? JSON.parse(state.state) : null);
+      return response.status(200).send(null);
+    })
+    .catch((error) => {
+      logger.error(error);
+      return response.status(500).send({ message: `Unable to load state for: ${request.params.name}` });
     });
 }
 
 function putState(request, response) {
   logger.debug(`POST request for: ${request.params.name}`);
-  return terraformStateRepository.createOrUpdate({ name: request.params.name, state: JSON.stringify(request.body) })
-    .then((state) => response.status(201).send(state));
+  return terraformStateRepository.createOrUpdate(request.params.name, request.body)
+    .then(state => response.status(201).send(state))
+    .catch((error) => {
+      logger.error(error);
+      return response.status(500).send({ message: `Unable to store state for: ${request.params.name}` });
+    });
 }
 
 function deleteState(request, response) {
@@ -26,6 +37,10 @@ function deleteState(request, response) {
       } else {
         response.status(404).send();
       }
+    })
+    .catch((error) => {
+      logger.error(error);
+      return response.status(500).send({ message: `Unable to delete state for: ${request.params.name}` });
     });
 }
 
@@ -33,16 +48,14 @@ function lock(request, response) {
   logger.debug(`LOCK request for: ${request.params.name}`);
   return terraformStateRepository.lockState(request.params.name)
     .then(() => response.status(200).send())
-    .catch((err) => {
-      return response.status(423).send(err)
-    })
+    .catch(err => response.status(423).send(err));
 }
 
 function unlock(request, response) {
   logger.debug(`UNLOCK request for: ${request.params.name}`);
   return terraformStateRepository.unlockState(request.params.name)
     .then(() => response.status(200).send())
-    .catch((err) => response.status(500).send(err))
+    .catch(err => response.status(500).send(err));
 }
 
 export default {

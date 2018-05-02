@@ -31,9 +31,6 @@ const config = convict({
     default: 'password',
     env: 'PASSWORD',
   },
-  userName: {
-
-  }
 });
 
 export default config;

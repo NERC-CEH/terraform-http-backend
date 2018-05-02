@@ -11,5 +11,5 @@ function configureRoutes(app) {
 }
 
 export default {
-  configureRoutes
+  configureRoutes,
 };
