@@ -65,7 +65,7 @@ describe('terraformStateRepository', () => {
     it('should create and lock state if no state exists', () =>
       terraformStateRepository.lockState('unknown').then(() => {
         expect(mockDatabase().query()).toEqual({ name: 'unknown' });
-        expect(mockDatabase().entity()).toEqual({ name: 'unknown', state: undefined, locked: true }); // eslint-disable-line no-useless-escape
+        expect(mockDatabase().entity()).toEqual({ name: 'unknown', state: '', locked: true }); // eslint-disable-line no-useless-escape
       }));
   });
 
