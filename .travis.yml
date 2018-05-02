@@ -15,7 +15,6 @@ deploy:
   script: bash build/buildContainer.sh
   on:
     tags: true
-    branch: master
 
 notifications:
   email: false
