@@ -20,12 +20,12 @@ describe('terraform controller', () => {
       return terraformStateController.getState(request, response)
         .then(() => {
           expect(getStateByName).toHaveBeenCalledWith('stateName');
-          expect(response._getData()).toEqual({ key: 'value' });
+          expect(response._getData()).toEqual({ key: 'value' }); // eslint-disable-line no-underscore-dangle
           expect(response.statusCode).toBe(200);
         });
     });
 
-    it('should return null and status code if there is no state', function () {
+    it('should return null and status code if there is no state', () => {
       const response = httpMocks.createResponse();
 
       const getStateByName = jest.fn().mockReturnValue(Promise.resolve({ state: null }));
@@ -33,12 +33,12 @@ describe('terraform controller', () => {
 
       return terraformStateController.getState(request, response)
         .then(() => {
-          expect(response._getData()).toBe('');
+          expect(response._getData()).toBe(''); // eslint-disable-line no-underscore-dangle
           expect(response.statusCode).toBe(200);
         });
     });
 
-    it('should return 500 with error message on error', function () {
+    it('should return 500 with error message on error', () => {
       const response = httpMocks.createResponse();
 
       const getStateByName = jest.fn().mockReturnValue(Promise.reject());
@@ -46,7 +46,7 @@ describe('terraform controller', () => {
 
       return terraformStateController.getState(request, response)
         .then(() => {
-          expect(response._getData()).toEqual({ message: 'Unable to load state for: stateName' });
+          expect(response._getData()).toEqual({ message: 'Unable to load state for: stateName' }); // eslint-disable-line no-underscore-dangle
           expect(response.statusCode).toBe(500);
         });
     });
@@ -56,10 +56,10 @@ describe('terraform controller', () => {
     const request = httpMocks.createRequest({
       method: 'POST',
       params: { name: 'stateName' },
-      body: { key: 'value' }
+      body: { key: 'value' },
     });
 
-    it('should store the state as a string using the name in the params', function () {
+    it('should store the state as a string using the name in the params', () => {
       const response = httpMocks.createResponse();
 
       const createOrUpdate = jest.fn().mockReturnValue(Promise.resolve());
@@ -81,7 +81,7 @@ describe('terraform controller', () => {
       return terraformStateController.putState(request, response)
         .then(() => {
           expect(response.statusCode).toBe(500);
-          expect(response._getData()).toEqual({ message: 'Unable to store state for: stateName' });
+          expect(response._getData()).toEqual({ message: 'Unable to store state for: stateName' }); // eslint-disable-line no-underscore-dangle
         });
     });
   });
@@ -126,7 +126,7 @@ describe('terraform controller', () => {
       return terraformStateController.deleteState(request, response)
         .then(() => {
           expect(response.statusCode).toBe(500);
-          expect(response._getData()).toEqual({ message: 'Unable to delete state for: stateName'});
+          expect(response._getData()).toEqual({ message: 'Unable to delete state for: stateName' }); // eslint-disable-line no-underscore-dangle
         });
     });
   });
