@@ -46,6 +46,6 @@
     "dist": "yarn clean && yarn build && yarn update-version",
     "test": "yarn test-ci --watch",
     "test-ci": "jest",
-    "update-version": "VERSION=`git describe --tags --always` && sed -i -- 's/undefined/\"'\"$VERSION\"'\"/g' dist/version.js"
+    "update-version": "sed -i -- 's/undefined/\"'\"$CONTAINER_IMAGE_VERSION\"'\"/g' dist/version.js"
   }
 }

@@ -10,6 +10,12 @@ cache: yarn
 
 script: yarn test-ci
 
+deploy:
+  provider: script
+  script: bash build/buildContainer.sh
+  on:
+    branch: master
+
 notifications:
   email: false
   slack:
