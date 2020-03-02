@@ -18,7 +18,7 @@ logger.add(logger.transports.Console, { timestamp: true, colorize: true });
 
 const app = express();
 app.use(basicAuth({ users: { [username]: password } }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '10mb', extended: true}));
 
 routes.configureRoutes(app);
 
